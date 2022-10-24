@@ -29,10 +29,13 @@ public class ListController {
         columnChoices.put("positionType", "Position Type");
         columnChoices.put("coreCompetency", "Skill");
 
+        tableChoices.put("all","View All Jobs");
+
         tableChoices.put("employer", JobData.getAllEmployers());
         tableChoices.put("location", JobData.getAllLocations());
         tableChoices.put("positionType", JobData.getAllPositionTypes());
         tableChoices.put("coreCompetency", JobData.getAllCoreCompetency());
+
     }
 
     @GetMapping(value = "")
@@ -44,21 +47,25 @@ public class ListController {
         model.addAttribute("positions", JobData.getAllPositionTypes());
         model.addAttribute("skills", JobData.getAllCoreCompetency());
 
-        return "list";
+        return "list";      // routes to list.html
     }
 
     @GetMapping(value = "jobs")
     public String listJobsByColumnAndValue(Model model, @RequestParam String column, @RequestParam(required = false) String value) {
         ArrayList<Job> jobs;
+
+
         if (column.equals("all")){
+
             jobs = JobData.findAll();
-            model.addAttribute("title", "All Jobs");
+            model.addAttribute("title", "All Jobs: ");
         } else {
             jobs = JobData.findByColumnAndValue(column, value);
             model.addAttribute("title", "Jobs with " + columnChoices.get(column) + ": " + value);
         }
+
         model.addAttribute("jobs", jobs);
 
-        return "list-jobs";
+        return "list-jobs";     // routes to list-jobs.html
     }
 }
